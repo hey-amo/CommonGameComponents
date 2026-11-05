@@ -33,7 +33,7 @@ import Testing
 }
 
 @Test func testPreferencesReflectCurrentInMemoryState() async throws {
-    let settings = GameSettings(enabledSettings: [.sound, .darkMode])
+    let settings = GameSettings(enabledSettings: [.sound, .darkMode, .showHints])
 
     let preferences = await settings.preferences
 
@@ -42,10 +42,34 @@ import Testing
             .sound(enabled: true),
             .music(enabled: false),
             .haptic(enabled: false),
-            .darkMode(enabled: true)
+            .darkMode(enabled: true),
+            .showHints(enabled: true)
         ]
     )
     
+}
+
+@Test func testPreferencePropertiesReflectTheirValues() {
+    let preferences: [(Preference, Setting, Bool)] = [
+        (.sound(enabled: true), .sound, true),
+        (.music(enabled: false), .music, false),
+        (.haptic(enabled: true), .haptic, true),
+        (.darkMode(enabled: false), .darkMode, false),
+        (.showHints(enabled: true), .showHints, true)
+    ]
+
+    for (preference, setting, isEnabled) in preferences {
+        #expect(preference.setting == setting)
+        #expect(preference.isEnabled == isEnabled)
+    }
+}
+
+@Test func testSetEnabledFalseDisablesSetting() async throws {
+    let settings = GameSettings(enabledSettings: [.sound])
+
+    await settings.setEnabled(false, for: .sound)
+
+    #expect(!(await settings.isEnabled(.sound)))
 }
 
 @Test func testConcurrentTogglesAreSerialized() async throws {
@@ -64,5 +88,3 @@ import Testing
     //XCTAssertFalse(isEnabled)
     #expect(!isEnabled)
 }
-
-

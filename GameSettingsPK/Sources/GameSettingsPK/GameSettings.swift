@@ -6,6 +6,7 @@ public enum Setting: CaseIterable, Hashable, Sendable {
     case music
     case haptic
     case darkMode
+    case showHints
 }
 
 public enum Preference: Codable, Equatable, Sendable {
@@ -13,6 +14,7 @@ public enum Preference: Codable, Equatable, Sendable {
     case music(enabled: Bool)
     case haptic(enabled: Bool)
     case darkMode(enabled: Bool)
+    case showHints(enabled: Bool)
 
     public var setting: Setting {
         switch self {
@@ -20,6 +22,7 @@ public enum Preference: Codable, Equatable, Sendable {
         case .music: .music
         case .haptic: .haptic
         case .darkMode: .darkMode
+        case .showHints: .showHints
         }
     }
 
@@ -28,7 +31,8 @@ public enum Preference: Codable, Equatable, Sendable {
         case let .sound(enabled),
              let .music(enabled),
              let .haptic(enabled),
-             let .darkMode(enabled):
+             let .darkMode(enabled),
+             let .showHints(enabled):
             enabled
         }
     }
@@ -70,6 +74,7 @@ public actor GameSettings {
             case .music: return .music(enabled: isEnabled)
             case .haptic: return .haptic(enabled: isEnabled)
             case .darkMode: return .darkMode(enabled: isEnabled)
+            case .showHints: return .showHints(enabled: isEnabled)
             }
         }
     }
